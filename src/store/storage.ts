@@ -1,6 +1,8 @@
-import {createStorageStoreImpl, StorageItem, StorageManagerHandlerHelpers, StorageStore} from 'react-modular-store';
 import {AppState, AppStateStatus} from 'react-native';
 import {useEffect} from 'react';
+import { StorageItem } from '../storage/interface';
+import { StorageManagerHandlerHelpers, StorageStore } from './storage/types';
+import { createStorageStoreImpl } from './storage/create';
 
 export type StorageStoreConfig<T> = {
     storage: StorageItem<T>,

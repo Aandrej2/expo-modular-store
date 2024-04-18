@@ -1,18 +1,20 @@
-import {applyStorageMixins, BaseStorage, CachedStorageMixin, Storage} from 'react-modular-store';
-import * as SecureStore from 'expo-secure-store';
+import { getItemAsync, setItemAsync, deleteItemAsync } from 'expo-secure-store';
+import { BaseStorage, Storage } from './interface';
+import { applyStorageMixins } from './apply-storage-mixins';
+import { CachedStorageMixin } from './mixins/cached';
 
 class SecureStorageImpl<T extends {} = Record<string, any>> implements BaseStorage<T> {
     async getItem<K extends keyof T>(key: K): Promise<T[K] | null> {
-        const item = await SecureStore.getItemAsync(key.toString());
+        const item = await getItemAsync(key.toString());
         return item ? JSON.parse(item) : null;
     }
 
     async setItem<K extends keyof T>(key: K, item: T[K]): Promise<void> {
-        return SecureStore.setItemAsync(key.toString(), JSON.stringify(item));
+        return setItemAsync(key.toString(), JSON.stringify(item));
     }
 
     async removeItem(key: keyof T): Promise<void> {
-        return SecureStore.deleteItemAsync(key.toString());
+        return deleteItemAsync(key.toString());
     }
 }
 
