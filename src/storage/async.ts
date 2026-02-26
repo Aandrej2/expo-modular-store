@@ -28,8 +28,12 @@ class AsyncStorageImpl<T extends {} = Record<string, any>> implements Storage<T>
     }
 
     async multiGet<K extends keyof T>(keys: K[]): Promise<(T[K] | null)[]> {
-        const items = await RNAsyncStorage.multiGet(keys.map(key => key.toString()));
-        return items.map(([, item]) => item ? JSON.parse(item) : null);
+        const items = await RNAsyncStorage.getMany(keys.map(key => key.toString()));
+        if (items == null) return keys.map(() => null);
+        return keys.map(key => {
+            const item = items[key.toString()];
+            return item ? JSON.parse(item) : null;
+        });
     }
 
     Item<K extends keyof T>(key: K): StorageItem<T[K]> {
