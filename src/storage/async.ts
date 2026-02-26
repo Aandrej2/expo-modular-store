@@ -1,4 +1,4 @@
-import RNAsyncStorage from '@react-native-async-storage/async-storage';
+import { Storage as ExpoStorage } from 'expo-storage';
 import { StaticStorageItem, Storage, StorageItem } from './interface';
 import { StaticStorageItemImpl, StorageItemImpl } from './implementation';
 
@@ -7,33 +7,30 @@ class AsyncStorageImpl<T extends {} = Record<string, any>> implements Storage<T>
     }
 
     async getItem<K extends keyof T>(key: K): Promise<T[K] | null> {
-        const item = await RNAsyncStorage.getItem(key.toString());
+        const item = await ExpoStorage.getItem({ key: key.toString() });
         return item ? JSON.parse(item) : null;
     }
 
     async setItem<K extends keyof T>(key: K, item: T[K]): Promise<void> {
-        return RNAsyncStorage.setItem(key.toString(), JSON.stringify(item));
+        return ExpoStorage.setItem({ key: key.toString(), value: JSON.stringify(item) });
     }
 
     async removeItem(key: keyof T): Promise<void> {
-        return RNAsyncStorage.removeItem(key.toString());
+        return ExpoStorage.removeItem({ key: key.toString() });
     }
 
     async clear(): Promise<void> {
-        return RNAsyncStorage.clear();
+        for (const key of await this.keys()) {
+            await this.removeItem(key);
+        }
     }
 
     keys(): Promise<(keyof T)[]> {
-        return RNAsyncStorage.getAllKeys() as Promise<(keyof T)[]>;
+        return ExpoStorage.getAllKeys() as Promise<(keyof T)[]>;
     }
 
     async multiGet<K extends keyof T>(keys: K[]): Promise<(T[K] | null)[]> {
-        const items = await RNAsyncStorage.getMany(keys.map(key => key.toString()));
-        if (items == null) return keys.map(() => null);
-        return keys.map(key => {
-            const item = items[key.toString()];
-            return item ? JSON.parse(item) : null;
-        });
+        return Promise.all(keys.map((key) => this.getItem(key)));
     }
 
     Item<K extends keyof T>(key: K): StorageItem<T[K]> {

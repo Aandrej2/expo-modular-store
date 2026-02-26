@@ -1,6 +1,6 @@
 {
   "name": "expo-modular-store",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": false,
   "description": "Continuation of the react-modular-store-expo package from xgallom (https://www.npmjs.com/package/react-modular-store-expo)",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "~3.0.1",
+    "expo-storage": "~54.0.8",
     "@types/react": "~19.1.0",
     "expo-secure-store": "~55.0.8",
     "react": "~19.1.0",
