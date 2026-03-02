@@ -1,6 +1,6 @@
 {
   "name": "expo-modular-store",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "private": false,
   "description": "Continuation of the react-modular-store-expo package from xgallom (https://www.npmjs.com/package/react-modular-store-expo)",
   "main": "dist/index.js",

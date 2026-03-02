@@ -16,11 +16,19 @@ class AsyncStorageImpl<T extends {} = Record<string, any>> implements Storage<T>
     }
 
     async setItem<K extends keyof T>(key: K, item: T[K]): Promise<void> {
-        return ExpoStorage.setItem({ key: key.toString(), value: JSON.stringify(item) });
+        try {
+            return ExpoStorage.setItem({ key: key.toString(), value: JSON.stringify(item) });
+        } catch (error) {
+            // Handle error if needed
+        }
     }
 
     async removeItem(key: keyof T): Promise<void> {
-        return ExpoStorage.removeItem({ key: key.toString() });
+        try {
+            return ExpoStorage.removeItem({ key: key.toString() });
+        } catch (error) {
+            // Handle error if needed
+        }
     }
 
     async clear(): Promise<void> {
@@ -30,7 +38,11 @@ class AsyncStorageImpl<T extends {} = Record<string, any>> implements Storage<T>
     }
 
     keys(): Promise<(keyof T)[]> {
-        return ExpoStorage.getAllKeys() as Promise<(keyof T)[]>;
+        try {
+            return ExpoStorage.getAllKeys() as Promise<(keyof T)[]>;
+        } catch (error) {
+            return new Promise((resolve) => resolve([]));
+        }
     }
 
     async multiGet<K extends keyof T>(keys: K[]): Promise<(T[K] | null)[]> {
