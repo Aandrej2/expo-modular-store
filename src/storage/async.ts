@@ -7,8 +7,12 @@ class AsyncStorageImpl<T extends {} = Record<string, any>> implements Storage<T>
     }
 
     async getItem<K extends keyof T>(key: K): Promise<T[K] | null> {
-        const item = await ExpoStorage.getItem({ key: key.toString() });
-        return item ? JSON.parse(item) : null;
+        try {
+            const item = await ExpoStorage.getItem({ key: key.toString() });
+            return item ? JSON.parse(item) : null;
+        } catch (error) {
+            return null;
+        }
     }
 
     async setItem<K extends keyof T>(key: K, item: T[K]): Promise<void> {
